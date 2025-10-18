@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet);
+            background-size: 200% 200%;
+            animation: rainbowFlow 30s linear infinite;
+        }
+        @keyframes rainbowFlow {
+            0% { background-position: 0 0; }
+            100% { background-position: 200% 200%; }
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        input { width: 80%; padding: 10px; margin-bottom: 20px; }
+        button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Downloader</h1>
+        <input type="text" id="url" placeholder="Paste YouTube URL here">
+        <br>
+        <button onclick="downloadVideo()">Download</button>
+    </div>
+
+    <script>
+        async function downloadVideo() {
+            const url = document.getElementById('url').value;
+            if (!url) { alert('Enter a URL'); return; }
+
+            try {
+                // Use the public API to get the download link
+                const apiUrl = `https://yt-dlp-api.peterli.website/api/v1/video?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                if (data.url) {
+                    // Trigger download
+                    const a = document.createElement('a');
+                    a.href = data.url;
+                    a.download = 'video.mp4';
+                    a.click();
+                } else {
+                    alert('Failed to get download link');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error fetching video');
+            }
+        }
+    </script>
+</body>
+</html>
